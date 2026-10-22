@@ -45,6 +45,21 @@ def delete_contact():
     else:
         print("Contact not found.")
 
+def update_contact():
+    name = input("Enter the contact name to update: ")
+    contact = find_contact(name)
+    if contact:
+        new_name = input("Enter the new name (leave blank to keep current): ")
+        new_phone = input("Enter the new phone (leave blank to keep current): ")
+
+        if new_name:
+            contact["name"] = new_name
+        if new_phone:
+            contact["phone"] = new_phone
+
+        print("Contact updated.")
+    else:
+        print("Contact not found.")
 
 def main():
     while True:
@@ -52,9 +67,10 @@ def main():
         print("2. View contacts")
         print("3. Search contact")
         print("4. Delete contact")
-        print("5. Quit")
+        print("5. Update contact")
+        print("6. Quit")
 
-        choice = input("\nEnter your choice (1-5): ")
+        choice = input("\nEnter your choice (1-6): ")
 
         if choice == "1":
             add_contact()
@@ -65,10 +81,12 @@ def main():
         elif choice == "4":
             delete_contact()
         elif choice == "5":
+            update_contact()
+        elif choice == "6":
             print("Goodbye!")
             break
         else:
-            print("Please choose a number from 1 to 5.")
+            print("Please choose a number from 1 to 6.")
 
 
 main()
