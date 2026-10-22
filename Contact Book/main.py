@@ -1,65 +1,74 @@
-# Contact Book
-# A simple terminal program to add, view, search and delete contacts.
-
+# Contact Book 
 print("Contact Book")
 
 contacts = []
 
-while True:
-    print("\n1. Add contact")
-    print("2. View contacts")
-    print("3. Search contact")
-    print("4. Delete contact")
-    print("5. Quit")
 
-    choice = input("\nEnter your choice (1-5): ")
+def add_contact():
+    name = input("Enter the name: ")
+    phone = input("Enter the phone: ")
+    contact = {"name": name, "phone": phone}
+    contacts.append(contact)
+    print("Contact added.")
 
-    # Add a contact
-    if choice == "1":
-        name = input("Enter the name: ")
-        phone = input("Enter the phone: ")
-        contact = {"name": name, "phone": phone}
-        contacts.append(contact)
-        print("\nContact was added.")
 
-    # View all contacts
-    elif choice == "2":
-        if not contacts:
-            print("No contacts yet.")
-        else:
-            print("\nContact List")
-            for index, contact in enumerate(contacts, start=1):
-                print(f"{index}. {contact['name']} - {contact['phone']}")
-
-    # Search a contact by name (ignores capital letters)
-    elif choice == "3":
-        name = input("Enter name to search: ")
-        found = False
-        for contact in contacts:
-            if name.lower() == contact["name"].lower():
-                found = True
-                print(f"{contact['name']} - {contact['phone']}")
-                print("Contact found!")
-        if not found:
-            print("Contact not found.")
-
-    # Delete a contact by name
-    elif choice == "4":
-        name = input("Enter name to delete: ")
-        found = False
-        for contact in contacts:
-            if contact["name"].lower() == name.lower():
-                found = True
-                contacts.remove(contact)
-                print("Contact deleted.")
-                break
-        if not found:
-            print("Contact not found.")
-
-    # Quit the program
-    elif choice == "5":
-        print("Goodbye!")
-        break
-
+def view_contacts():
+    if not contacts:
+        print("No contacts yet.")
     else:
-        print("Please choose a number from 1 to 5.")
+        for index, contact in enumerate(contacts, start=1):
+            print(f"{index}. {contact['name']} - {contact['phone']}")
+
+
+def find_contact(name):
+    for contact in contacts:
+        if name.lower() == contact["name"].lower():
+            return contact
+    return None
+
+
+def search_contact():
+    name = input("Enter the name to find: ")
+    contact = find_contact(name)
+    if contact:
+        print(f"{contact['name']} - {contact['phone']}")
+    else:
+        print("Contact not found.")
+
+
+def delete_contact():
+    name = input("Enter the contact name to delete: ")
+    contact = find_contact(name)
+    if contact:
+        contacts.remove(contact)
+        print("Contact deleted.")
+    else:
+        print("Contact not found.")
+
+
+def main():
+    while True:
+        print("\n1. Add contact")
+        print("2. View contacts")
+        print("3. Search contact")
+        print("4. Delete contact")
+        print("5. Quit")
+
+        choice = input("\nEnter your choice (1-5): ")
+
+        if choice == "1":
+            add_contact()
+        elif choice == "2":
+            view_contacts()
+        elif choice == "3":
+            search_contact()
+        elif choice == "4":
+            delete_contact()
+        elif choice == "5":
+            print("Goodbye!")
+            break
+        else:
+            print("Please choose a number from 1 to 5.")
+
+
+main()
