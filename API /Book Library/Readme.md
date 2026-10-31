@@ -1,52 +1,73 @@
 # Book API
 
-A simple REST API built with FastAPI to manage a list of books.
-Built as a learning project: I wrote every endpoint myself.
+A simple REST API to manage a library of books. It is built with Python, FastAPI and SQLite. Books are saved in a database file, so they stay after the server stops.
 
 ## Features
-- Get all books, or one book by id
-- Add, update and delete books
-- Input validation with Pydantic
-- 404 errors when a book is not found
 
-## Setup
-1. Install the packages:
-   pip install -r requirements.txt
-2. Start the server:
-   python3 -m uvicorn main:app --reload
-3. Open the interactive docs at http://127.0.0.1:8000/docs
+- Add a book
+- See all books
+- See one book by its id
+- Update a book
+- Delete a book
+- Clear 404 message when a book is not found
+
+## Tech used
+
+- Python 3
+- FastAPI
+- SQLite (using Python's `sqlite3`)
+
+## Project files
+
+- `main.py`: the FastAPI app and its endpoints
+- `database.py`: all the SQLite functions (create table, add, get, update, delete)
+- `requirements.txt`: the packages the project needs
+
+## How to run it
+
+1. Download the project and open the folder in the terminal.
+
+2. Make a virtual environment and activate it:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. Install the packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Start the server:
+
+```bash
+fastapi dev main.py
+```
+
+5. Open `http://127.0.0.1:8000/docs` in your browser to try the API.
+
+The database file (`books.db`) and its table are created automatically when the app starts.
 
 ## Endpoints
+
 | Method | Path | What it does |
 |--------|------|--------------|
-| GET | / | Check that the API is running |
-| GET | /books | Get all books |
-| GET | /books/{book_id} | Get one book |
-| POST | /books | Add a new book |
-| PUT | /books/{book_id} | Update a book |
-| DELETE | /books/{book_id} | Delete a book |
+| GET | `/` | Shows that the API is running |
+| GET | `/books` | Gives all books |
+| GET | `/books/{book_id}` | Gives one book |
+| POST | `/books` | Adds a new book |
+| PUT | `/books/{book_id}` | Updates a book |
+| DELETE | `/books/{book_id}` | Deletes a book |
 
-## Example request body (POST and PUT)
+## Example book
+
+```json
 {
-  "title": "Book title",
-  "author": "Author name"
+  "title": "Atomic Habits",
+  "author": "James Clear",
+  "genre": "Self Help",
+  "year": 2018
 }
-
-## How to run the tests
-
-1. Install the tools:
-
 ```
-python3 -m pip install -r requirements.txt pytest httpx
-```
-
-2. Run the tests:
-
-```
-python3 -m pytest
-```
-
-You should see `9 passed`.
-## Notes
-- Data is stored in a Python list, so it resets when the server restarts.
-- New ids use the biggest existing id + 1, so ids never repeat after a delete.

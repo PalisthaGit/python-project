@@ -1,26 +1,28 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import database
 
-books = [
-    {
-        "id":1,
-        "title":"Book 1",
-        "author": "Author 1",
-    },
 
-    {
-        "id":2,
-        "title":"Book 2",
-        "author": "Author 2"
+def row_to_dict(row):
+    return {
+        "id":row[0],
+        "title":row[1],
+        "author":row[2],
+        "genre":row[3],
+        "year": row[4]
+
     }
 
-]
 
 app = FastAPI()
+database.create_table()
+
 
 class BookIn(BaseModel):
     title: str
     author: str
+    genre: str
+    year: int
 
 @app.get("/")
 def home():
@@ -29,44 +31,35 @@ def home():
 
 @app.get("/books")
 def get_books():
-    return books
+    rows = database.get_all_books()
+    result = []
+    for row in rows:
+        result.append(row_to_dict(row))
+    return result
 
 @app.get("/books/{book_id}")
 def get_book(book_id: int):
-    for book in books:
-        if book_id == book["id"]:
-            return book
-    raise HTTPException(status_code=404, detail="Book not found")
+    row= database.get_book_by_id(book_id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
+    return row_to_dict(row)
 
 @app.post("/books")
 def add_book(book: BookIn):
-    biggest_id = 0
-    for existing_book in books:
-        if existing_book['id']> biggest_id:
-            biggest_id = existing_book['id']
-    new_book = {
-        "id": biggest_id+1,
-        "title":book.title,
-        "author":book.author
-    }
-    books.append(new_book)
-    return new_book
+    database.add_book(book.title, book.author, book.genre, book.year)
+    return {"message": "Book was added"}
 
 @app.delete("/books/{book_id}")
 def delete_book(book_id:int):
-    for book in books:
-        if book_id == book["id"]:
-            books.remove(book)
-            return {"message": "Book deleted"}
+    if database.delete_book(book_id):
+        return {"message": "Book deletled"}
     raise HTTPException(status_code=404, detail="Book not found")
 
 @app.put("/books/{book_id}")
 def update_book(book_id:int, book: BookIn):
-    for existing_book in books:
-        if existing_book['id'] == book_id:
-            existing_book['title'] = book.title
-            existing_book['author'] = book.author
-            return existing_book
+    if database.update_book(book_id, book.title, book.author, book.genre, book.year):
+        return {"message": "Book updated"}
     raise HTTPException(status_code=404, detail = "Book not found")
         
 
