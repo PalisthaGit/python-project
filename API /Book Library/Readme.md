@@ -32,6 +32,21 @@ Built as a learning project: I wrote every endpoint myself.
   "author": "Author name"
 }
 
+## How to run the tests
+
+1. Install the tools:
+
+```
+python3 -m pip install -r requirements.txt pytest httpx
+```
+
+2. Run the tests:
+
+```
+python3 -m pytest
+```
+
+You should see `9 passed`.
 ## Notes
 - Data is stored in a Python list, so it resets when the server restarts.
 - New ids use the biggest existing id + 1, so ids never repeat after a delete.
