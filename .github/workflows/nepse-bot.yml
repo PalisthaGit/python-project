@@ -1,7 +1,8 @@
-
 name: NEPSE Daily Bot
 
 on:
+  schedule:
+    - cron: "45 6 * * *"
   workflow_dispatch:
 
 jobs:
